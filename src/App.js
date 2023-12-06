@@ -1,46 +1,15 @@
-import React, { useState, useEffect } from "react";
 import "./App.css";
-import Freecurrencyapi from "@everapi/freecurrencyapi-js";
+import ExchangeTable from "./pages/ExchangeTable";
+import Navbar from "./Components/NavBar";
+import { Typography } from "@mui/material";
 
 function App() {
-  const apiKey = process.env.REACT_APP_API_CURRENCY_KEY;
-  const [currencyRate, setCurrencyRate] = useState(null);
-  const [baseCurrency, setBaseCurrency] = useState("USD");
-  const [exchangedCurrency, setExchangedCurrency] = useState("EUR");
-  const [amountToExchange, setAmountToExchange] = useState(30);
-  const [amountExchanged, setAmountExchanged] = useState(null);
-
-  const freecurrencyapi = new Freecurrencyapi(apiKey);
-
-  const getCurrencyConversion = async () => {
-    try {
-      const response = await freecurrencyapi.latest({
-        base_currency: baseCurrency,
-        currencies: exchangedCurrency,
-      });
-      setCurrencyRate(response.data[exchangedCurrency]);
-    } catch (error) {
-      console.error("Error fetching currency conversion:", error);
-    }
-  };
-
-  useEffect(() => {
-    getCurrencyConversion();
-    const  unformattedAmount = amountToExchange * currencyRate;
-    const roundedAmountExchanged = unformattedAmount.toFixed(2);
-    const formattedAmountExchanged = parseFloat(roundedAmountExchanged);
-    setAmountExchanged(formattedAmountExchanged);
-  }, [currencyRate, amountToExchange, exchangedCurrency, baseCurrency])
-  
-
   return (
     <div className="App">
+      <Navbar />
       <header className="App-header">
-        <p> amount to exchange:  {amountToExchange} {baseCurrency}</p>
-        <p> Exchanged Amount: {exchangedCurrency} {amountExchanged}</p>
-        <p>
-         <code>${currencyRate}</code>.
-        </p>
+        <Typography variant="h4" sx={{marginTop:"-10vh", marginBottom: "3vh"}}>Exchangify</Typography>
+        <ExchangeTable />
       </header>
     </div>
   );
